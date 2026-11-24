@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a0536">
+<meta name="description" content="Pencatat uang masuk arisan sederhana">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>RAEZHY ARISAN</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0f022f;--bg2:#1a0536;--panel:#241048;--panel2:#2d1558;--line:#4a2380;
+  --violet:#8a3dff;--purple:#5c08a0;--magenta:#ee53d5;--pink:#ff7ad9;
+  --gold:#f9b90d;--gold2:#fee859;--cream:#fae6df;--text:#fbf1ff;--muted:#bfa6e0;
+  --grad:linear-gradient(110deg,var(--violet),var(--magenta) 60%,var(--pink));
+  --gold-grad:linear-gradient(120deg,var(--gold),var(--gold2));
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{margin:0;min-height:100vh;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  padding:max(20px,env(safe-area-inset-top)) 16px max(40px,env(safe-area-inset-bottom));
+  background:
+    radial-gradient(520px 320px at 85% -40px,#ee53d555,transparent 70%),
+    radial-gradient(480px 380px at -10% 20%,#8a3dff44,transparent 70%),
+    linear-gradient(180deg,var(--bg2),var(--bg) 60%);
+  background-attachment:fixed}
+.wrap{max-width:520px;margin:0 auto}
+
+/* header */
+.brand{display:flex;align-items:center;gap:14px;margin:6px 0 20px}
+.logo{width:58px;height:58px;border-radius:18px;flex:none;border:2px solid #ee53d5aa;box-shadow:0 0 0 4px #8a3dff22,0 10px 28px #ee53d544}
+.brand h1{margin:0;font-size:21px;font-weight:900;letter-spacing:.6px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand p{margin:3px 0 0;font-size:12.5px;color:var(--muted)}
+
+/* total */
+.total{position:relative;overflow:hidden;border-radius:26px;padding:22px 22px 20px;margin-bottom:14px;
+  background:linear-gradient(135deg,#5c08a0,#9a2fc4 55%,#ee53d5);
+  border:1px solid #ff7ad966;box-shadow:0 18px 40px #5c08a055,inset 0 1px 0 #ffffff33}
+.total::after{content:"";position:absolute;right:-40px;top:-50px;width:170px;height:170px;border-radius:50%;
+  background:radial-gradient(circle,#fee85955,transparent 70%)}
+.total .label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:1.4px;color:#ffe9fb}
+.coin{width:18px;height:18px;border-radius:50%;background:var(--gold-grad);box-shadow:0 0 0 2px #b37a0044,0 0 14px #f9b90d88;
+  display:grid;place-items:center;font-size:10px;font-weight:900;color:#7a4a00}
+.amount{position:relative;z-index:1;font-size:clamp(30px,9vw,42px);font-weight:900;letter-spacing:-1px;margin:10px 0 4px;word-break:break-word;
+  color:var(--cream);text-shadow:0 2px 14px #1a053666}
+.total .sub{font-size:12.5px;color:#ffe3f8}
+
+/* stats */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px 15px}
+.stat small{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}
+.stat b{font-size:15px;color:var(--gold2)}
+
+/* card */
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:16px;box-shadow:0 10px 30px #0004}
+.card h2{display:flex;align-items:center;gap:8px;font-size:16px;margin:0 0 15px}
+.card h2::before{content:"";width:4px;height:16px;border-radius:4px;background:var(--grad)}
+.formrow{margin-bottom:14px}
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:7px}
+input{width:100%;border:1.5px solid var(--line);background:#12042e;color:var(--text);padding:14px;border-radius:14px;font-size:16px;outline:none;transition:.15s;font-family:inherit}
+input:focus{border-color:var(--magenta);box-shadow:0 0 0 3px #ee53d52a}
+input::placeholder{color:#7d63a6}
+input[type=date]{min-height:50px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{border:1px solid var(--line);background:#1b0a3d;color:var(--cream);padding:7px 12px;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.chip:active{background:var(--purple);border-color:var(--magenta)}
+.btn{width:100%;border:0;border-radius:14px;padding:15px;background:var(--grad);color:#fff;font-size:15px;font-weight:800;cursor:pointer;
+  box-shadow:0 10px 24px #ee53d544;transition:transform .1s;font-family:inherit;letter-spacing:.3px}
+.btn:active{transform:scale(.98)}
+
+/* history */
+.history-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.history-head h2{margin:0}
+.count{font-size:11.5px;font-weight:700;color:var(--gold2);background:#f9b90d1f;border:1px solid #f9b90d44;padding:4px 10px;border-radius:999px}
+.month{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--pink);margin:16px 0 4px}
+.month span:last-child{color:var(--muted);text-transform:none;letter-spacing:0}
+.entry{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 0;border-bottom:1px dashed #4a238099}
+.entry:last-child{border-bottom:0}
+.entry .l{display:flex;align-items:center;gap:12px;min-width:0}
+.dot{width:38px;height:38px;border-radius:12px;flex:none;display:grid;place-items:center;font-size:16px;background:#f9b90d1c;border:1px solid #f9b90d44}
+.date{font-size:12.5px;color:var(--muted);margin-bottom:3px}
+.money{font-weight:800;font-size:16px;color:var(--cream)}
+.delete{border:1px solid #ff7ad94d;background:#ee53d514;color:var(--pink);border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.delete:active{background:#ee53d533}
+.empty{text-align:center;color:var(--muted);font-size:13px;padding:26px 0 14px}
+.empty .big{font-size:34px;margin-bottom:8px}
+
+.install{display:none;width:100%;margin-top:4px;border:1.5px solid #f9b90d88;background:#f9b90d14;color:var(--gold2);padding:13px;border-radius:14px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit}
+.foot{text-align:center;color:#8f76b8;font-size:11px;margin-top:20px;line-height:1.6}
+
+.toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translate(-50%,30px);opacity:0;pointer-events:none;
+  background:var(--gold-grad);color:#3b2400;font-weight:800;font-size:13px;padding:11px 18px;border-radius:999px;box-shadow:0 10px 30px #0008;transition:.25s;z-index:10}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="brand">
+    <img class="logo" src="icon-192.png" alt="Ikon RAEZHY ARISAN">
+    <div><h1>RAEZHY ARISAN</h1><p>Pencatat uang masuk</p></div>
+  </header>
+
+  <section class="total">
+    <div class="label"><span class="coin">Rp</span>TOTAL UANG MASUK</div>
+    <div class="amount" id="total">Rp0</div>
+    <div class="sub" id="totalSub">0 pencatatan</div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><small>Bulan ini</small><b id="statMonth">Rp0</b></div>
+    <div class="stat"><small>Catatan terakhir</small><b id="statLast">-</b></div>
+  </section>
+
+  <section class="card">
+    <h2>Catat uang masuk</h2>
+    <form id="form">
+      <div class="formrow"><label for="date">Tanggal</label><input type="date" id="date" required></div>
+      <div class="formrow">
+        <label for="amount">Nominal uang masuk (Rp)</label>
+        <input type="text" id="amount" inputmode="numeric" autocomplete="off" placeholder="Contoh: 50.000" required>
+        <div class="chips" id="chips">
+          <button type="button" class="chip" data-v="10000">+10rb</button>
+          <button type="button" class="chip" data-v="50000">+50rb</button>
+          <button type="button" class="chip" data-v="100000">+100rb</button>
+          <button type="button" class="chip" data-v="500000">+500rb</button>
+        </div>
+      </div>
+      <button class="btn" type="submit">+ Simpan uang masuk</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <div class="history-head"><h2>Riwayat uang masuk</h2><span class="count" id="count">0 data</span></div>
+    <div id="list"></div>
+  </section>
+
+  <button class="install" id="installBtn">Pasang aplikasi</button>
+  <div class="foot">Data tersimpan di perangkat ini<br>Bisa digunakan offline</div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY='raezhy-arisan-income-v1';
+const $=id=>document.getElementById(id);
+let rows=[];
+
+const rupiah=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n);
+const parseD=s=>new Date(s+'T00:00:00');
+const dateFmt=s=>parseD(s).toLocaleDateString('id-ID',{weekday:'short',day:'2-digit',month:'long',year:'numeric'});
+const monthFmt=s=>parseD(s).toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+const todayStr=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+const digits=v=>String(v).replace(/\D/g,'');
+const fmtNum=v=>{const d=digits(v);return d?Number(d).toLocaleString('id-ID'):''};
+
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),1800)}
+
+function load(){
+  try{const d=JSON.parse(localStorage.getItem(KEY)||'[]');rows=Array.isArray(d)?d:[]}catch(e){rows=[]}
+  render();
+}
+function save(){
+  try{localStorage.setItem(KEY,JSON.stringify(rows))}catch(e){toast('Gagal menyimpan data')}
+  render();
+}
+
+function render(){
+  const total=rows.reduce((a,r)=>a+Number(r.amount),0);
+  $('total').textContent=rupiah(total);
+  $('totalSub').textContent=rows.length+' pencatatan';
+  $('count').textContent=rows.length+' data';
+
+  const ym=todayStr().slice(0,7);
+  $('statMonth').textContent=rupiah(rows.filter(r=>r.date.startsWith(ym)).reduce((a,r)=>a+Number(r.amount),0));
+
+  const sorted=[...rows].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+  $('statLast').textContent=sorted.length?parseD(sorted[0].date).toLocaleDateString('id-ID',{day:'2-digit',month:'short'}):'-';
+
+  if(!sorted.length){
+    $('list').innerHTML='<div class="empty"><div class="big">🪙</div>Belum ada uang masuk dicatat.</div>';
+    return;
+  }
+  const groups={};
+  sorted.forEach(r=>{(groups[r.date.slice(0,7)]=groups[r.date.slice(0,7)]||[]).push(r)});
+  $('list').innerHTML=Object.keys(groups).sort().reverse().map(k=>{
+    const g=groups[k],sum=g.reduce((a,r)=>a+Number(r.amount),0);
+    return `<div class="month"><span>${monthFmt(g[0].date)}</span><span>${rupiah(sum)}</span></div>`+
+      g.map(r=>`<div class="entry"><div class="l"><div class="dot">💰</div><div><div class="date">${dateFmt(r.date)}</div><div class="money">${rupiah(Number(r.amount))}</div></div></div><button class="delete" data-id="${r.id}" aria-label="Hapus pencatatan">Hapus</button></div>`).join('');
+  }).join('');
+  $('list').querySelectorAll('.delete').forEach(btn=>btn.onclick=()=>{
+    if(confirm('Hapus catatan uang masuk ini?')){rows=rows.filter(r=>r.id!==Number(btn.dataset.id));save();toast('Catatan dihapus')}
+  });
+}
+
+$('date').value=todayStr();
+$('amount').addEventListener('input',e=>{e.target.value=fmtNum(e.target.value)});
+$('chips').addEventListener('click',e=>{
+  const c=e.target.closest('.chip');if(!c)return;
+  const cur=Number(digits($('amount').value))||0;
+  $('amount').value=fmtNum(cur+Number(c.dataset.v));
+});
+$('form').addEventListener('submit',e=>{
+  e.preventDefault();
+  const date=$('date').value,amount=Number(digits($('amount').value));
+  if(!date||!Number.isFinite(amount)||amount<=0)return;
+  rows.push({id:Date.now(),date,amount});
+  save();
+  $('amount').value='';$('date').value=todayStr();
+  toast('Tersimpan ✓');
+});
+
+let deferredPrompt;const install=$('installBtn');
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;install.style.display='block'});
+install.onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;install.style.display='none'};
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
+load();
+</script>
+</body>
+</html>
